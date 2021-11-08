@@ -849,6 +849,16 @@ has@^1.0.0:
   dependencies:
     function-bind "^1.1.1"
 
+hash-it@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/hash-it/-/hash-it-5.0.2.tgz#8cc981944964a5124f74f1065af0c0a5d182d556"
+  integrity sha512-csU3E/a9QEmEgPPxoShVuMcFWM329IGioEPRvYVBv3r5BFrU8pCfnk3jGEVvriAcwqd+nl6KsNhPPjg8MUzkhQ==
+
+hsk-grader@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hsk-grader/-/hsk-grader-1.0.0.tgz#d373ee11b57030fdc58a7a149045ad9744fcb713"
+  integrity sha512-PZu20rCp2o40moeT26na0fbmDyKKQwyb+QoOCObj8IwWAA5ABByorhZ5EwAny9wlhKeceU9nt9xk+jc6eYYxSg==
+
 html-tags@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"

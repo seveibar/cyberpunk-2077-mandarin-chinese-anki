@@ -27,6 +27,10 @@ There are about 70,000 audio files in the full anki deck.
 > I used Traditional Chinese for this deck, but you can regenerate it for simplifed
 > chinese using the same steps. The audio is the same for both written forms.
 
+## TODO
+
+- Order items by difficulty (can we guess based on the length/HSK-level of the sentence?)
+
 ## Development
 
 ### Initial Files (from Cyberpunk 2077)
@@ -64,6 +68,16 @@ project).
 2. Convert the `wem` files into `ogg` files using the `wem2ogg` with `yarn run esr src/010-convert-web-to-ogg.ts`
 3. Convert the `ogg` files into `mp3` files using the `ffmpeg` with `yarn run esr src/020-convert-ogg-to-mp3.ts`
 
-### Create Cards
+### Parse Strings from `Mod`
 
-1. Run `yarn run esr
+1. Run `yarn run esr src/030-parse-strings.ts`
+
+### Translate and Create Pinyin
+
+This requires the `GOOGLE_PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` environment variables. Read the google translate api getting started.
+
+1. Run `yarn run esr src/040-google-translate-and-pinyin.ts`
+
+### Create Anki Deck
+
+1. Run `yarn run esr src/050-create-anki-deck.ts`
