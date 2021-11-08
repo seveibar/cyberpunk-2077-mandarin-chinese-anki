@@ -9,4 +9,6 @@ audio_files
 Mod
 .env
 global-subtitles.json
+global-subtitles-with-translations.json
 node_modules
+cedict_db
