@@ -4,6 +4,10 @@ Language learning is difficult without immersion- you have to memorize thousands
 of words and phrases without any real purpose or objective. **This project will
 help you learn enough Chinese to immerse yourself in Chinese Cyberpunk 2077**.
 
+[Watch the youtube video](https://www.youtube.com/watch?v=Hzu2u2vFOp0)
+
+![anki deck screenshot](https://user-images.githubusercontent.com/1910070/140913911-61daac69-b20b-4bfa-a981-0b8bf4334781.png)
+
 The dialog and voice acting within Cyberpunk 2077 is dynamic, exciting and but
 there are some differences between dialog on Cyberpunk and dialog in an ordinary
 introductory course. For example, instead of learning to say:
