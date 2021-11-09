@@ -8,15 +8,27 @@ import hash from "hash-it"
 
 type Subtitle = {
   "en-usFemaleVariant": string
-  "zh-cnFemaleResPath": string
+  "en-usMaleVariant": string
+
   "zh-twFemaleVariant": string
   "zh-twFemaleVariantTranslation": string
   "zh-twFemaleVariantPinyin": string
-  "en-usMaleVariant": string
-  "zh-cnMaleResPath": string
   "zh-twMaleVariant": string
-  "zh-twMaleVariantTranslation": string
+  "zh-twMaleVariantTraditional": string
   "zh-twMaleVariantPinyin": string
+
+  "zh-cnFemaleResPath": string
+  "zh-cnFemaleVariant": string
+  "zh-cnFemaleVariantTranslation": string
+  "zh-cnFemaleVariantTraditional": string
+  "zh-cnFemaleVariantPinyin": string
+  "zh-cnFemaleVariantPinyin2": string
+  "zh-cnMaleResPath": string
+  "zh-cnMaleVariant": string
+  "zh-cnMaleVariantTranslation": string
+  "zh-cnMaleVariantTraditional": string
+  "zh-cnMaleVariantPinyin": string
+  "zh-cnMaleVariantPinyin2": string
 }
 
 async function getLine(
@@ -24,15 +36,17 @@ async function getLine(
   sex: "Male" | "Female"
 ): Promise<{ line: string; difficulty: number } | null> {
   const otherSex = sex === "Male" ? "Female" : "Male"
-  const keyPhrase = sub[`zh-tw${sex}Variant`] || sub[`zh-tw${otherSex}Variant`]
+  const keyPhrase =
+    sub[`zh-cn${sex}VariantTraditional`] ||
+    sub[`zh-cn${otherSex}VariantTraditional`]
   if (!keyPhrase) return null
   const pinyin =
-    sub[`zh-tw${sex}VariantPinyin`] || sub[`zh-tw${otherSex}VariantPinyin`]
+    sub[`zh-cn${sex}VariantPinyin2`] || sub[`zh-cn${otherSex}VariantPinyin2`]
   const gameTranslation =
     sub[`en-us${sex}Variant`] || sub[`en-us${otherSex}Variant`]
   const googleTranslation =
-    sub[`zh-tw${sex}VariantTranslation`] ||
-    sub[`zh-tw${otherSex}VariantTranslation`]
+    sub[`zh-cn${sex}VariantTranslation`] ||
+    sub[`zh-cn${otherSex}VariantTranslation`]
   const soundFileName = sub[`zh-cn${sex}ResPath`]
     .split("/")
     .slice(-1)[0]
@@ -48,7 +62,7 @@ async function getLine(
     ].join(""),
     difficulty:
       (await grade(keyPhrase || "")) +
-      2 * (hash(soundFileName) / Number.MAX_SAFE_INTEGER),
+      0.5 * (hash(soundFileName) / Number.MAX_SAFE_INTEGER),
   }
 }
 
@@ -77,8 +91,15 @@ export default async function main() {
   lines.sort((a, b) => a.difficulty - b.difficulty)
 
   await fs.writeFile(
-    "cyberpunk-anki-deck.txt",
+    "cyberpunk-anki-deck-full.txt",
     lines.map(({ line }) => line).join("\n")
+  )
+  await fs.writeFile(
+    "cyberpunk-anki-deck-100.txt",
+    lines
+      .slice(0, 100)
+      .map(({ line }) => line)
+      .join("\n")
   )
 }
 

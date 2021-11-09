@@ -13,3 +13,5 @@ global-subtitles-with-translations.json
 node_modules
 cedict_db
 cyberpunk-anki-deck.txt
+translation-cache.json
+cyberpunk-anki-deck-full.txt

@@ -7,7 +7,8 @@ dramatically
 import { config as dotenv } from "dotenv"
 import fs from "fs/promises"
 import { v2 } from "@google-cloud/translate"
-import convertHanziToPinyin from "hanzi-to-pinyin"
+import { tify } from "chinese-conv"
+import axios from "axios"
 import PromisePool from "@supercharge/promise-pool"
 
 const Translate = v2.Translate
@@ -24,22 +25,35 @@ let pinyinCount = 0,
   translationCount = 0
 
 async function updateSubtitle(subtitle: any) {
-  for (const cnKey of ["zh-twFemaleVariant", "zh-twMaleVariant"]) {
+  for (const cnKey of [
+    // The translations for taiwan don't match the audio, so we're ignoring them
+    // "zh-twFemaleVariant",
+    // "zh-twMaleVariant",
+    "zh-cnFemaleVariant",
+    "zh-cnMaleVariant",
+  ]) {
     if (!subtitle[cnKey]) continue
     if (!subtitle[`${cnKey}Translation`]) {
       const [translation] = await translate.translate(subtitle[cnKey], "en")
       subtitle[`${cnKey}Translation`] = translation
       translationCount += 1
     }
-    if (!subtitle[`${cnKey}Pinyin`]) {
+    if (!subtitle[`${cnKey}Pinyin2`]) {
       pinyinCount += 1
-      subtitle[`${cnKey}Pinyin`] = (
-        await convertHanziToPinyin(subtitle[cnKey], {
-          segmented: true,
-        })
+      const { data: pinyin } = await axios.get(
+        // Run pinyin api locally for more speeeeed
+        // `http://localhost:3000/api?hanzi=${encodeURIComponent(subtitle[cnKey])}`
+        `https://pinyin.seve.blog/api?hanzi=${encodeURIComponent(
+          subtitle[cnKey]
+        )}`
       )
-        .join("  ")
-        .replace(/  /g, " ")
+      subtitle[`${cnKey}Pinyin2`] = pinyin.replace(/-/g, " ")
+    }
+  }
+  for (const cnKey of ["zh-cnFemaleVariant", "zh-cnMaleVariant"]) {
+    if (!subtitle[cnKey]) continue
+    if (!subtitle[`${cnKey}Traditional`]) {
+      subtitle[`${cnKey}Traditional`] = tify(subtitle[cnKey])
     }
   }
 }

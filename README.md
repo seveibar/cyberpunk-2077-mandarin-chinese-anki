@@ -4,8 +4,6 @@ Language learning is difficult without immersion- you have to memorize thousands
 of words and phrases without any real purpose or objective. **This project will
 help you learn enough Chinese to immerse yourself in Chinese Cyberpunk 2077**.
 
-![example of text in anki](https://user-images.githubusercontent.com/1910070/140694576-331e98a8-7b49-4c9f-b4df-48538fc4c3f7.png)
-
 The dialog and voice acting within Cyberpunk 2077 is dynamic, exciting and but
 there are some differences between dialog on Cyberpunk and dialog in an ordinary
 introductory course. For example, instead of learning to say:
@@ -24,14 +22,23 @@ The audio and subtitles files from Cyberpunk 2077 are used to generate an Anki
 deck. Anki is a spaced repitition system for learning Chinese, it's one of the most
 widely used tools for memorizing vocabulary and phrases for learning Chinese.
 
-There are about 70,000 audio files in the full anki deck.
+There are about 75,000 audio files in the full anki deck.
 
 > I used Traditional Chinese for this deck, but you can regenerate it for simplifed
 > chinese using the same steps. The audio is the same for both written forms.
 
-## TODO
+## FAQ
 
-- Order items by difficulty (can we guess based on the length/HSK-level of the sentence?)
+### How are the items ordered?
+
+I ordered the items by difficulty using a [naive HSK grader](https://github.com/seveibar/hsk-grader)
+
+### How can I get the full 70k deck with audio?
+
+It's probably not a good idea for me to post all the audio files b/c DMCA.
+However you can repeat the steps in development to get the deck if you have the
+game installed. If there's a way to make the deck sharable in Anki, I'd love to
+add a link here.
 
 ## Development
 
