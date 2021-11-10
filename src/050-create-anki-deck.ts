@@ -1,5 +1,5 @@
 import fs from "fs/promises"
-import grade from "hsk-grader"
+import grade, { getDefinitions } from "hsk-grader"
 import hash from "hash-it"
 
 // Here's an example anki card in the notes.txt format
@@ -58,7 +58,19 @@ async function getLine(
       pinyin,
       `\t`,
       gameTranslation + "<br><br>",
-      googleTranslation,
+      googleTranslation + "<br><br><br>",
+      `<table>` +
+        getDefinitions(keyPhrase)
+          .map(
+            (d) =>
+              `<tr><td style="font-size: 2em">${d.hanzi}</td><td>${
+                d.pinyin
+              }</td><td style="text-align:left; padding-left: 2em">${d.translations
+                .join(",")
+                .substr(0, 240)}</td></tr>`
+          )
+          .join("") +
+        "</table>",
     ].join(""),
     difficulty:
       (await grade(keyPhrase || "")) +
