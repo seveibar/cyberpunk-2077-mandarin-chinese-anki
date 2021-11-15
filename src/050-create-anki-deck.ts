@@ -34,7 +34,11 @@ type Subtitle = {
 async function getLine(
   sub: Subtitle,
   sex: "Male" | "Female"
-): Promise<{ line: string; difficulty: number } | null> {
+): Promise<{
+  line: string
+  lineWithoutPinyin: string
+  difficulty: number
+} | null> {
   const otherSex = sex === "Male" ? "Female" : "Male"
   const keyPhrase =
     sub[`zh-cn${sex}VariantTraditional`] ||
@@ -51,30 +55,33 @@ async function getLine(
     .split("/")
     .slice(-1)[0]
     .replace(".wem", ".mp3")
+  const fullLine = [
+    `[sound:${soundFileName}]` + `<br><br><span style="font-size: 1.5em">`,
+    keyPhrase + "</span><br><br>",
+    `<span class="pinyin" style="opacity: 0.75;">${pinyin}</span>`,
+    `\t`,
+    gameTranslation + "<br><br>",
+    googleTranslation + "<br><br><br>",
+    `<table>` +
+      (await getDefinitions(keyPhrase))
+        .filter((d) => d.hsk !== 1)
+        .map(
+          (d) =>
+            `<tr><td style="font-size: 2em">${d.traditional}</td><td>${
+              d.pinyin
+            }</td><td style="text-align:left; padding-left: 1em; width: 50%; font-size:0.5em;">${d.translations.join(
+              ","
+            )}</td></tr>`
+        )
+        .join("") +
+      "</table>",
+  ]
   return {
-    line: [
-      `[sound:${soundFileName}]` + "<br><br>",
-      keyPhrase + "<br><br>",
-      pinyin,
-      `\t`,
-      gameTranslation + "<br><br>",
-      googleTranslation + "<br><br><br>",
-      `<table>` +
-        getDefinitions(keyPhrase)
-          .map(
-            (d) =>
-              `<tr><td style="font-size: 2em">${d.hanzi}</td><td>${
-                d.pinyin
-              }</td><td style="text-align:left; padding-left: 2em">${d.translations
-                .join(",")
-                .substr(0, 240)}</td></tr>`
-          )
-          .join("") +
-        "</table>",
-    ].join(""),
+    line: fullLine.join(""),
+    lineWithoutPinyin: fullLine.slice(0, 2).concat(fullLine.slice(3)).join(""),
     difficulty:
       (await grade(keyPhrase || "")) +
-      0.5 * (hash(soundFileName) / Number.MAX_SAFE_INTEGER),
+      0.5 * (hash(soundFileName + "seed1") / Number.MAX_SAFE_INTEGER),
   }
 }
 
@@ -85,9 +92,18 @@ export default async function main() {
     )
   )
 
-  let lines: Array<{ line: string | null; difficulty: number }> = []
+  let lines: Array<{
+    line: string | null
+    lineWithoutPinyin: string | null
+    difficulty: number
+  }> = []
 
+  let subtitlesConverted = 0
   for (const sub of subtitles) {
+    subtitlesConverted += 1
+    if (subtitlesConverted % 100 === 0) {
+      console.log(`${subtitlesConverted}/${subtitles.length}`)
+    }
     if (sub["zh-cnFemaleResPath"]) {
       lines.push((await getLine(sub, "Female")) as any)
     }
@@ -102,17 +118,25 @@ export default async function main() {
 
   lines.sort((a, b) => a.difficulty - b.difficulty)
 
-  await fs.writeFile(
-    "cyberpunk-anki-deck-full.txt",
-    lines.map(({ line }) => line).join("\n")
-  )
-  await fs.writeFile(
-    "cyberpunk-anki-deck-100.txt",
-    lines
-      .slice(0, 100)
-      .map(({ line }) => line)
-      .join("\n")
-  )
+  for (const withPinyin of [false, true]) {
+    await fs.writeFile(
+      `cyberpunk-anki-deck-full${withPinyin ? "-pinyin" : ""}.txt`,
+      lines.map((l) => (withPinyin ? l.line : l.lineWithoutPinyin)).join("\n")
+    )
+    for (const [start, size] of [
+      [0, 100],
+      [100, 1000],
+      [1100, 10000],
+    ]) {
+      await fs.writeFile(
+        `cyberpunk-anki-deck-${size}${withPinyin ? "-pinyin" : ""}.txt`,
+        lines
+          .slice(start, start + size)
+          .map((l) => (withPinyin ? l.line : l.lineWithoutPinyin))
+          .join("\n")
+      )
+    }
+  }
 }
 
 if (!module.parent) {

@@ -33,6 +33,10 @@ There are about 75,000 audio files in the full anki deck.
 
 ## FAQ
 
+### How many Chinese words are in Cyberpunk?
+
+There are around 16,700 words in the full deck.
+
 ### How are the items ordered?
 
 I ordered the items by difficulty using a [naive HSK grader](https://github.com/seveibar/hsk-grader)
